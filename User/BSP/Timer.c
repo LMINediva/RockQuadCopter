@@ -1,4 +1,5 @@
 #include "stm32f10x.h"                  // Device header
+#include "Timer.h"
 #include "Tasks.h"
 
 // ¼ÆÊý1ms¡¢2msºÍ4ms
