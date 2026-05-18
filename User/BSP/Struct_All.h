@@ -4,5 +4,6 @@
 
 #include "Delay.h"
 #include "LED.h"
+#include "Timer.h"
 
 #endif

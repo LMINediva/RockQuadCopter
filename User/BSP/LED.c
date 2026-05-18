@@ -1,4 +1,6 @@
-#include "struct_all.h"
+#include "stm32f10x.h"                  // Device header
+#include "Delay.h"
+#include "LED.h"
 
 /**
  * 函数：LED初始化
@@ -31,7 +33,7 @@ void LED_Init(void)
  */
 void LED_ON(void)
 {
-	// 设置LED_Pin引脚为低电平
+	// 设置LED控制引脚为低电平
 	GPIO_ResetBits(LED_Port, LED_Pin);
 }
 
@@ -42,7 +44,7 @@ void LED_ON(void)
  */
 void LED_OFF(void)
 {
-	// 设置LED_Pin引脚为高电平
+	// 设置LED控制引脚为高电平
 	GPIO_SetBits(LED_Port, LED_Pin);
 }
 
