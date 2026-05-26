@@ -47,9 +47,9 @@ void BSP_Init(void)
 	// LED闪烁
 	LED_ON_OFF();
 	// Timer3初始化，频率为：1KHZ
-	// Timer3_Init(1000);
+	Timer3_Init(1000);
 	// NVIC初始化
-	// My_NVIC_Init();
+	My_NVIC_Init();
 	// PWM初始化
 	Motor_Init();
 	

@@ -3606,9 +3606,9 @@
       <ActiveTab>0</ActiveTab>
       <Doc>
         <Name>.\User\main.c</Name>
-        <ColumnNumber>25</ColumnNumber>
-        <TopLine>25</TopLine>
-        <CurrentLine>33</CurrentLine>
+        <ColumnNumber>20</ColumnNumber>
+        <TopLine>13</TopLine>
+        <CurrentLine>60</CurrentLine>
         <Folding>1</Folding>
         <ContractedFolders></ContractedFolders>
         <PaneID>0</PaneID>
@@ -3669,9 +3669,9 @@
       </Doc>
       <Doc>
         <Name>.\User\APP\Tasks.c</Name>
-        <ColumnNumber>30</ColumnNumber>
+        <ColumnNumber>17</ColumnNumber>
         <TopLine>39</TopLine>
-        <CurrentLine>29</CurrentLine>
+        <CurrentLine>54</CurrentLine>
         <Folding>1</Folding>
         <ContractedFolders></ContractedFolders>
         <PaneID>0</PaneID>
@@ -3688,8 +3688,8 @@
       <Doc>
         <Name>.\User\BSP\Motor.c</Name>
         <ColumnNumber>5</ColumnNumber>
-        <TopLine>143</TopLine>
-        <CurrentLine>155</CurrentLine>
+        <TopLine>100</TopLine>
+        <CurrentLine>144</CurrentLine>
         <Folding>1</Folding>
         <ContractedFolders></ContractedFolders>
         <PaneID>0</PaneID>

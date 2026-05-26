@@ -110,7 +110,6 @@ void Motor_Init(void)
 void Motor_Out(int16_t duty1, int16_t duty2, int16_t duty3, int16_t duty4)
 {
 	// 限制CCR的值的范围为0~1000
-	/*
 	if (duty1 > 1000)
 	{
 		duty1 = 1000;
@@ -143,22 +142,10 @@ void Motor_Out(int16_t duty1, int16_t duty2, int16_t duty3, int16_t duty4)
 	{
 		duty4 = 0;
 	}
-	*/
 	
-	if (duty1 > 0)
-	{		
-		// 设置CCR1~4的值
-		TIM_SetCompare1(TIM2, duty1);
-		TIM_SetCompare2(TIM2, duty2);
-		TIM_SetCompare3(TIM2, duty3);
-		TIM_SetCompare4(TIM2, duty4);
-	}
-	else
-	{
-		// 设置CCR1~4的值
-		TIM_SetCompare1(TIM2, -duty1);
-		TIM_SetCompare2(TIM2, -duty2);
-		TIM_SetCompare3(TIM2, -duty3);
-		TIM_SetCompare4(TIM2, -duty4);
-	}
+	// 设置CCR1~4的值
+	TIM_SetCompare1(TIM2, duty1);
+	TIM_SetCompare2(TIM2, duty2);
+	TIM_SetCompare3(TIM2, duty3);
+	TIM_SetCompare4(TIM2, duty4);
 }
