@@ -3,7 +3,8 @@
 #include "stm32f10x.h"                  // Device header
 
 #include "Delay.h"
-#include "LED.h"
 #include "Timer.h"
+#include "LED.h"
+#include "Motor.h"
 
 #endif

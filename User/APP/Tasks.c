@@ -1,7 +1,7 @@
-#include "stm32f10x.h"                  // Device header
 #include "Tasks.h"
-#include "LED.h"
 #include "Timer.h"
+#include "LED.h"
+#include "Motor.h"
 
 // 板级支持包中的硬件驱动是否初始化完成标志
 uint8_t BSP_Init_OK = 0;
@@ -47,9 +47,11 @@ void BSP_Init(void)
 	// LED闪烁
 	LED_ON_OFF();
 	// Timer3初始化，频率为：1KHZ
-	Timer3_Init(1000);
+	// Timer3_Init(1000);
 	// NVIC初始化
-	My_NVIC_Init();
+	// My_NVIC_Init();
+	// PWM初始化
+	Motor_Init();
 	
 	BSP_Init_OK = 1;
 }

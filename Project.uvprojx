@@ -640,6 +640,16 @@
               <FileType>1</FileType>
               <FilePath>.\User\BSP\Timer.c</FilePath>
             </File>
+            <File>
+              <FileName>Motor.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\User\BSP\Motor.h</FilePath>
+            </File>
+            <File>
+              <FileName>Motor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\User\BSP\Motor.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

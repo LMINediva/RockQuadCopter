@@ -1,8 +1,14 @@
 #include "Struct_All.h"
 #include "Tasks.h"
 #include "OLED.h"
+#include "Key.h"
 
-volatile uint16_t Num_1ms, Num_2ms, Num_4ms;
+// volatile uint16_t Num_1ms, Num_2ms, Num_4ms;
+
+// 定义用于接收按键键码的变量
+uint8_t KeyNum;
+// 定义速度变量
+int16_t Speed;
 
 int main(void)
 {	
@@ -10,14 +16,33 @@ int main(void)
 	OLED_Init();
 	// 板级支持包中的硬件驱动初始化
 	BSP_Init();
+	// 按键初始化
+	Key_Init();
 	
-	// 显示字符串
-	OLED_ShowString(1, 1, "1ms:");
-	OLED_ShowString(2, 1, "2ms:");
-	OLED_ShowString(3, 1, "4ms:");
+	// 1行1列显示字符串Speed:
+	OLED_ShowString(1, 1, "Speed:");
 	
 	while (1)
 	{
+		// 获取按键键码
+		KeyNum = Key_GetNum();
+		// 按键1按下
+		if (KeyNum == 1)
+		{
+			Speed += 200;
+			// 速度变量超过1000后
+			if (Speed > 1000)
+			{
+				Speed = -1000;
+			}
+		}
+		
+		// 设置直流电机的速度为速度变量
+		Motor_Out(Speed, Speed, Speed, Speed);
+		// OLED显示速度变量
+		OLED_ShowSignedNum(1, 7, Speed, 4);
+		
+		/*
 		if (Count_1ms >= 1)
 		{
 			Num_1ms++;
@@ -46,5 +71,6 @@ int main(void)
 		{			
 			OLED_ShowNum(3, 5, Num_4ms / 1000, 5);
 		}
+		*/
 	}
 }
