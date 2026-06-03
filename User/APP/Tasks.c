@@ -1,5 +1,6 @@
 #include "Tasks.h"
 #include "Timer.h"
+#include "DMA_ADC.h"
 #include "LED.h"
 #include "Motor.h"
 
@@ -52,6 +53,8 @@ void BSP_Init(void)
 	My_NVIC_Init();
 	// PWM初始化
 	Motor_Init();
+	// ADC及DMA初始化
+	ADC1_Init();
 	
 	BSP_Init_OK = 1;
 }

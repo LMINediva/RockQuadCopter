@@ -1,16 +1,9 @@
 #include "Struct_All.h"
 #include "Tasks.h"
 #include "OLED.h"
-#include "Key.h"
+#include "Delay.h"
 
-volatile uint16_t Num_1ms, Num_2ms, Num_4ms;
-
-// 定义用于接收按键键码的变量
-uint8_t KeyNum;
-// 定义速度变量
-int16_t Speed;
-// 控制递增或递减的变量
-int8_t increment = 1;
+// volatile uint16_t Num_1ms, Num_2ms, Num_4ms;
 
 int main(void)
 {	
@@ -18,57 +11,28 @@ int main(void)
 	OLED_Init();
 	// 板级支持包中的硬件驱动初始化
 	BSP_Init();
-	// 按键初始化
-	Key_Init();
 	
 	/* 显示静态字符串 */
-	// 1行1列显示字符串Speed:
-	OLED_ShowString(1, 1, "Speed:");
-	OLED_ShowString(2, 1, "1ms:");
-	OLED_ShowString(3, 1, "2ms:");
-	OLED_ShowString(4, 1, "4ms:");
+	OLED_ShowString(1, 1, "Battery:");
+	OLED_ShowString(2, 1, "Vref:");
+	OLED_ShowString(3, 1, "Result:");
 	
 	while (1)
 	{	
-		// 获取按键键码
-		KeyNum = Key_GetNum();
-		// 按键1按下
-		if (KeyNum == 1)
-		{
-			if (increment)
-			{
-				// 递增模式
-				if (Speed < 1000)
-				{
-					// 速度变量递增部分
-					Speed += 200;
-				}
-				else
-				{
-					// 切换到递减模式
-					increment = 0;
-				}
-			}
-			else
-			{
-				// 递减模式
-				if (Speed > 0)
-				{
-					// 递减部分
-					Speed -= 200;
-				}
-				else
-				{
-					// 切换到递增模式
-					increment = 1;
-				}
-			}
-		}
-		// 设置直流电机的速度为速度变量
-		Motor_Out(Speed, Speed, Speed, Speed);
-		// OLED显示速度变量
-		OLED_ShowSignedNum(1, 7, Speed, 4);
+		// 3.7V锂电池电压
+		OLED_ShowNum(1, 9, ADC_Value[0], 4);
+		// 内部参考电压（1.2V）
+		OLED_ShowNum(2, 6, ADC_Value[1], 4);
+		// 计算电池电压的100倍
+		Voltage_Printf();
+		// 结果：(uint16_t)(2.0f * ADC_Value[0] / ADC_Value[1] * 1.2f * 100);
+		// 显示电压值的整数部分
+		OLED_ShowNum(3, 8, Battery, 4);
 		
+		// 延时100ms，手动增加一些转换的间隔时间
+		Delay_ms(100);
+		
+		/**
 		if (Count_1ms >= 1)
 		{
 			Num_1ms++;
@@ -97,5 +61,6 @@ int main(void)
 		{			
 			OLED_ShowNum(4, 5, Num_4ms / 1000, 5);
 		}
+		**/
 	}
 }
