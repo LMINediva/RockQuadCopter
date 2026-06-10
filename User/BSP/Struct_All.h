@@ -5,6 +5,7 @@
 #include "Delay.h"
 #include "Timer.h"
 #include "DMA_ADC.h"
+#include "Uart.h"
 #include "LED.h"
 #include "Motor.h"
 

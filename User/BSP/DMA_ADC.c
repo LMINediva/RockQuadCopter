@@ -74,9 +74,10 @@ static void ADC1_Mode_Config(void)
 	// 将结构体变量交给ADC_Init，配置ADC1
 	ADC_Init(ADC1, &ADC_InitStructure);
 	
-	/* DMA初始化 */
 	// 重置DMA1的通道1为默认值
 	DMA_DeInit(DMA1_Channel1);
+	
+	/* DMA初始化 */
 	// 定义结构体变量
 	DMA_InitTypeDef DMA_InitStructure;
 	// 外设基地址，即 4001 244C
@@ -85,7 +86,7 @@ static void ADC1_Mode_Config(void)
 	DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_HalfWord;
 	// 外设地址自增，选择失能，始终以ADC数据寄存器为源
 	DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
-	// 存储器基地址，给定存放AD转换结果的全局数组AD_Value
+	// 存储器基地址，给定存放AD转换结果的全局数组ADC_Value
 	DMA_InitStructure.DMA_MemoryBaseAddr = (uint32_t)ADC_Value;
 	// 存储器数据宽度，选择半字，与源数据宽度对应
 	DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_HalfWord;
