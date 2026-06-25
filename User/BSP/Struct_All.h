@@ -8,5 +8,24 @@
 #include "Uart.h"
 #include "LED.h"
 #include "Motor.h"
+#include "MPU6050.h"
+
+/* MPU6050--加速度计结构体 */
+struct _acc
+{
+	int16_t x;
+	int16_t y;
+	int16_t z;
+};
+extern struct _acc acc;
+
+/* MPU6050--陀螺仪结构体 */
+struct _gyro
+{
+	int16_t x;
+	int16_t y;
+	int16_t z;
+};
+extern struct _gyro gyro;
 
 #endif

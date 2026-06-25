@@ -1,17 +1,11 @@
 #include "Struct_All.h"
 #include "Tasks.h"
 #include "OLED.h"
-#include "Delay.h"
-#include "Key.h"
 
 // volatile uint16_t Num_1ms, Num_2ms, Num_4ms;
 
-// 定义用于接收按键键码的变量
-uint8_t KeyNum;
-// 按下次数记录
-uint8_t PressNum = 0;
-// 定义用于接收串口数据的变量
-uint8_t RxData;
+// 定义用于存放ID号的变量
+uint8_t ID;
 
 int main(void)
 {	
@@ -19,84 +13,31 @@ int main(void)
 	OLED_Init();
 	// 板级支持包中的硬件驱动初始化
 	BSP_Init();
-	// 按键初始化
-	Key_Init();
 	
 	/* 显示静态字符串 */
-	OLED_ShowString(1, 1, "Rx:");
-	OLED_ShowString(2, 1, "Tx:");
-	OLED_ShowString(3, 1, "Press:");
+	OLED_ShowString(1, 1, "ID:");
+	// 获取MPU6050的ID号
+	ID = MPU6050_GetID();
+	// OLED显示ID号
+	OLED_ShowHexNum(1, 4, ID, 2);
 	
 	while (1)
 	{	
-		// 获取按键键码
-		KeyNum = Key_GetNum();
+		// 连续读取MPU6050数据寄存器
+		MPU6050_SequenceRead();
+		// 合成MPU6050的16位数据
+		MPU6050_Compose();
 		
-		// 串口接收
-		// 检查串口接收数据的标志位
-		if (Serial_GetRxFlag() == 1)
-		{
-			// 获取串口接收的数据
-			RxData = Serial_GetRxData();
-			// 显示串口接收的数据
-			OLED_ShowHexNum(1, 4, RxData, 2);
-		}
+		// OLED显示数据
+		// 加速度计X、Y和Z轴的16位数据
+		OLED_ShowSignedNum(2, 1, acc.x, 5);
+		OLED_ShowSignedNum(3, 1, acc.y, 5);
+		OLED_ShowSignedNum(4, 1, acc.z, 5);
 		
-		// 串口发送
-		if (KeyNum == 1)
-		{
-			PressNum++;
-			// 显示按键次数
-			OLED_ShowNum(3, 7, PressNum, 2);
-			// 根据按下次数的不同，测试自定义串口函数
-			switch (PressNum)
-			{
-				case 1:
-					// 串口以HEX的形式输出U8（无符号8位整数）型数据
-					PrintHexU8(0x11);
-					// 显示串口发送的数据
-					OLED_ShowHexNum(2, 4, 0x11, 2);
-				break;
-				case 2:
-					// 串口以HEX的形式输出S16（有符号16位整数）型数据
-					PrintHexS16(0x2222);
-					// 显示串口发送的数据
-					OLED_ShowHexNum(2, 4, 0x2222, 4);
-				break;
-				case 3:
-					// 串口以字符的形式输出S8（有符号8位整数）型数据
-					PrintS8(100);
-					// 显示串口发送的数据
-					OLED_ShowNum(2, 4, 100, 3);
-				break;
-				case 4:
-					// 串口以字符的形式输出U8（无符号8位整数）型数据
-					PrintU8(200);
-					// 显示串口发送的数据
-					OLED_ShowNum(2, 4, 200, 3);
-				break;
-				case 5:
-					// 串口以字符的形式输出S16（有符号16位整数）型数据
-					PrintS16(30000);
-					// 显示串口发送的数据
-					OLED_ShowNum(2, 4, 30000, 5);
-				break;
-				case 6:
-					// 串口以字符的形式输出U16型数据
-					PrintU16(60000);
-					// 显示串口发送的数据
-					OLED_ShowNum(2, 4, 60000, 5);
-				break;
-				case 7:
-					// 串口输出字符串
-					PrintString("aaa");
-					// 显示串口发送的数据
-					OLED_ShowString(2, 4, "aaa");
-				break;
-				default:
-					break;
-			}
-		}
+		// 陀螺仪X、Y和Z轴的16位数据
+		OLED_ShowSignedNum(2, 8, gyro.x, 5);
+		OLED_ShowSignedNum(3, 8, gyro.y, 5);
+		OLED_ShowSignedNum(4, 8, gyro.z, 5);
 		
 		/**
 		if (Count_1ms >= 1)

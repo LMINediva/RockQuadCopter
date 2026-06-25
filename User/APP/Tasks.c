@@ -4,6 +4,7 @@
 #include "Uart.h"
 #include "LED.h"
 #include "Motor.h"
+#include "MPU6050.h"
 
 // 板级支持包中的硬件驱动是否初始化完成标志
 uint8_t BSP_Init_OK = 0;
@@ -69,6 +70,27 @@ void BSP_Init(void)
 	Motor_Init();
 	// ADC及DMA初始化
 	ADC1_Init();
+	// 如果MPU6050初始化不成功，则程序不向下运行
+	while (MPU6050_Init() != 1);
 	
 	BSP_Init_OK = 1;
+}
+
+/**
+ * 函数：主循环中运行频率为1000HZ的任务
+ * 参数：无
+ * 返回值：无
+ */
+void Task_1000HZ(void)
+{
+	// 如果连续读取MPU6050的数据寄存器失败
+	if (MPU6050_SequenceRead() == 1)
+	{
+		// 统计I2C出错的次数
+		I2C_Error++;
+		// 分次读取MPU6050的数据寄存器
+		MPU6050_SingleRead();
+	}
+	// 合成MPU6050的16位数据
+	MPU6050_Compose();
 }
