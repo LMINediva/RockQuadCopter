@@ -9,6 +9,7 @@
 #include "LED.h"
 #include "Motor.h"
 #include "MPU6050.h"
+#include "NRF24L01.h"
 
 /* MPU6050--加速度计结构体 */
 struct _acc

@@ -6,10 +6,10 @@
  * 参数：BitValue 协议层传入当前需要写入SCL的电平，范围：0~1
  * 返回值：无
  * 注意事项：此函数需要用户实现内容，
- * 当BitValue为0时，需要置SCL为低电平
+ * 当BitValue为0时，需要置SCL为低电平，
  * 当BitValue为1时，需要置SCL为高电平
  */
-void MyI2C_W_SCL(uint8_t BitValue)
+static void MyI2C_W_SCL(uint8_t BitValue)
 {
 	// 根据BitValue，设置SCL引脚的电平
 	GPIO_WriteBit(GPIOB, GPIO_Pin_10, (BitAction)BitValue);
@@ -22,10 +22,10 @@ void MyI2C_W_SCL(uint8_t BitValue)
  * 参数：BitValue 协议层传入当前需要写入SDA的电平，范围：0~1
  * 返回值：无
  * 注意事项：此函数需要用户实现内容，
- * 当BitValue为0时，需要置SDA为低电平
+ * 当BitValue为0时，需要置SDA为低电平，
  * 当BitValue为1时，需要置SDA为高电平
  */
-void MyI2C_W_SDA(uint8_t BitValue)
+static void MyI2C_W_SDA(uint8_t BitValue)
 {
 	// 根据BitValue，设置SDA引脚的电平
 	GPIO_WriteBit(GPIOB, GPIO_Pin_11, (BitAction)BitValue);
@@ -38,10 +38,10 @@ void MyI2C_W_SDA(uint8_t BitValue)
  * 参数：无
  * 返回值：协议层需要得到当前SDA的电平，范围：0~1
  * 注意事项：此函数需要用户实现内容，
- * 当SDA为低电平时，返回0
+ * 当SDA为低电平时，返回0，
  * 当SDA为高电平时，返回1
  */
-uint8_t MyI2C_R_SDA(void)
+static uint8_t MyI2C_R_SDA(void)
 {
 	uint8_t BitValue;
 	// 读取SDA电平

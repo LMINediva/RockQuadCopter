@@ -581,16 +581,6 @@
           <GroupName>User_BSP</GroupName>
           <Files>
             <File>
-              <FileName>Delay.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\User\BSP\Delay.c</FilePath>
-            </File>
-            <File>
-              <FileName>Delay.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\User\BSP\Delay.h</FilePath>
-            </File>
-            <File>
               <FileName>Key.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\User\BSP\Key.c</FilePath>
@@ -639,6 +629,16 @@
               <FileName>Timer.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\User\BSP\Timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>Delay.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\User\BSP\Delay.h</FilePath>
+            </File>
+            <File>
+              <FileName>Delay.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\User\BSP\Delay.c</FilePath>
             </File>
             <File>
               <FileName>Motor.h</FileName>
@@ -699,6 +699,31 @@
               <FileName>Struct_All.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\User\BSP\Struct_All.c</FilePath>
+            </File>
+            <File>
+              <FileName>MySPI.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\User\BSP\MySPI.h</FilePath>
+            </File>
+            <File>
+              <FileName>MySPI.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\User\BSP\MySPI.c</FilePath>
+            </File>
+            <File>
+              <FileName>NRF24L01.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\User\BSP\NRF24L01.c</FilePath>
+            </File>
+            <File>
+              <FileName>NRF24L01.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\User\BSP\NRF24L01.h</FilePath>
+            </File>
+            <File>
+              <FileName>NRF24L01_Define.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\User\BSP\NRF24L01_Define.h</FilePath>
             </File>
           </Files>
         </Group>
