@@ -51,21 +51,29 @@ int main(void)
 			同时置发送标志位，方便用户了解发送状态 */
 			// 发送标志位与发送状态的对应关系，可以转到此函数定义上方查看
 			NRF24L01_Send();
-			Delay_ms(10);
 			// 判断发送标志位
-			if (NRF24L01_SendFlag == 1)
+			while (1)
 			{
-				// 发送标志位为1，表示发送成功
-				// 发送成功计次变量自增
-				SendSuccessCount++;
+				if (NRF24L01_SendFlag)
+				{
+					if (NRF24L01_SendFlag == 1)
+					{
+						// 发送标志位为1，表示发送成功
+						// 发送成功计次变量自增
+						SendSuccessCount++;
+						// 跳出循环
+						break;
+					}
+					else
+					{
+						// 发送标志位不为1，即2/3/4，表示发送不成功
+						// 发送失败计次变量自增
+						SendFailedCount++;
+						// 跳出循环
+						break;
+					}
+				}
 			}
-			else
-			{
-				// 发送标志位不为1，即2/3/4，表示发送不成功
-				// 发送失败计次变量自增
-				SendFailedCount++;
-			}
-			
 			// 显示发送成功次数
 			OLED_ShowNum(1, 3, SendSuccessCount, 3);
 			// 显示发送失败次数
