@@ -15,7 +15,7 @@ void Key_Init(void)
 	GPIO_InitTypeDef GPIO_InitStructure;
 	// 上拉输入IPU（In Pull Up）
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5 | GPIO_Pin_6;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOB, &GPIO_InitStructure);
 }
@@ -23,7 +23,7 @@ void Key_Init(void)
 /**
  * 函数：按键获取键码
  * 参数：无
- * 返回值：按下按键的键码值，范围：0~1，返回0代表没有按键按下
+ * 返回值：按下按键的键码值，范围：0~2，返回0代表没有按键按下
  */
 uint8_t Key_GetNum(void)
 {
@@ -41,6 +41,19 @@ uint8_t Key_GetNum(void)
 		Delay_ms(20);
 		// 置键码为1
 		KeyNum = 1;
+	}
+	
+	// 读取GPIO口B6输入寄存器的状态，如果为0，则代表按键1按下
+	if (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_6) == 0) 
+	{
+		// 延时消抖
+		Delay_ms(20);
+		// 等待按键松手
+		while (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_6) == 0);
+		// 延时消抖
+		Delay_ms(20);
+		// 置键码为2
+		KeyNum = 2;
 	}
 	
 	return KeyNum;

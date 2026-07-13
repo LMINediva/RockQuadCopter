@@ -6,6 +6,7 @@
 #include "Timer.h"
 #include "DMA_ADC.h"
 #include "Uart.h"
+#include "Store.h"
 #include "LED.h"
 #include "Motor.h"
 #include "MPU6050.h"

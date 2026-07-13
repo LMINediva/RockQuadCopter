@@ -79,6 +79,9 @@ void BSP_Init(void)
 	NRF24L01_Init();
 	// 如果MPU6050初始化不成功，则程序不向下运行
 	while (MPU6050_Init() != 1);
+	// 参数存储模块初始化，在上电的时候将闪存的数据加载回Store_Data，
+	// 实现掉电不丢失
+	Store_Init();
 	
 	BSP_Init_OK = 1;
 }
