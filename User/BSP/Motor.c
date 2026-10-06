@@ -1,115 +1,115 @@
 #include "Motor.h"
 
 /**
- * º¯Êı£º¶¨Ê±Æ÷2Êä³ö±È½Ï³õÊ¼»¯
- * ²ÎÊı£ºÎŞ
- * ·µ»ØÖµ£ºÎŞ
+ * å‡½æ•°ï¼šå®šæ—¶å™¨2è¾“å‡ºæ¯”è¾ƒåˆå§‹åŒ–
+ * å‚æ•°ï¼šæ— 
+ * è¿”å›å€¼ï¼šæ— 
  */
 static void Timer2_Init(void)
 {
-	// ¿ªÆôTIM2µÄÊ±ÖÓ
+	// å¼€å¯TIM2çš„æ—¶é’Ÿ
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
 	
-	/* ÅäÖÃÊ±ÖÓÔ´ */
-	// Ñ¡ÔñTIM2ÎªÄÚ²¿Ê±ÖÓ£¬Èô²»µ÷ÓÃ´Ëº¯Êı£¬TIMÄ¬ÈÏÒ²ÎªÄÚ²¿Ê±ÖÓ
+	/* é…ç½®æ—¶é’Ÿæº */
+	// é€‰æ‹©TIM2ä¸ºå†…éƒ¨æ—¶é’Ÿï¼Œè‹¥ä¸è°ƒç”¨æ­¤å‡½æ•°ï¼ŒTIMé»˜è®¤ä¹Ÿä¸ºå†…éƒ¨æ—¶é’Ÿ
 	TIM_InternalClockConfig(TIM2);
 	
-	/* Ê±»ùµ¥Ôª³õÊ¼»¯ */
-	// PWMÆµÂÊ = 72000000 / 4 / 1000 = 18KHZ
-	// ¶¨Òå½á¹¹Ìå±äÁ¿
+	/* æ—¶åŸºå•å…ƒåˆå§‹åŒ– */
+	// PWMé¢‘ç‡ = 72000000 / 4 / 1000 = 18KHZ
+	// å®šä¹‰ç»“æ„ä½“å˜é‡
 	TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStructure;
-	// Ê±ÖÓ·ÖÆµ£¬Ñ¡Ôñ²»·ÖÆµ£¬´Ë²ÎÊıÓÃÓÚÅäÖÃÂË²¨Æ÷Ê±ÖÓ£¬²»Ó°ÏìÊ±»ùµ¥Ôª¹¦ÄÜ
+	// æ—¶é’Ÿåˆ†é¢‘ï¼Œé€‰æ‹©ä¸åˆ†é¢‘ï¼Œæ­¤å‚æ•°ç”¨äºé…ç½®æ»¤æ³¢å™¨æ—¶é’Ÿï¼Œä¸å½±å“æ—¶åŸºå•å…ƒåŠŸèƒ½
 	TIM_TimeBaseInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
-	// ¼ÆÊıÆ÷Ä£Ê½£¬Ñ¡ÔñÏòÉÏ¼ÆÊı
+	// è®¡æ•°å™¨æ¨¡å¼ï¼Œé€‰æ‹©å‘ä¸Šè®¡æ•°
 	TIM_TimeBaseInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
-	// ¼ÆÊıÖÜÆÚ£¬¼´ARRµÄÖµ
+	// è®¡æ•°å‘¨æœŸï¼Œå³ARRçš„å€¼
 	TIM_TimeBaseInitStructure.TIM_Period = 1000 - 1;
-	// Ô¤·ÖÆµÆ÷£¬¼´PSCµÄÖµ£¬PWMÊä³ö18KHZ
+	// é¢„åˆ†é¢‘å™¨ï¼Œå³PSCçš„å€¼ï¼ŒPWMè¾“å‡º18KHZ
 	TIM_TimeBaseInitStructure.TIM_Prescaler = 4 - 1;
-	// ÖØ¸´¼ÆÊıÆ÷£¬¸ß¼¶¶¨Ê±Æ÷²Å»áÓÃµ½
+	// é‡å¤è®¡æ•°å™¨ï¼Œé«˜çº§å®šæ—¶å™¨æ‰ä¼šç”¨åˆ°
 	TIM_TimeBaseInitStructure.TIM_RepetitionCounter = 0;
-	// ÅäÖÃTIM2µÄÊ±»ùµ¥Ôª
+	// é…ç½®TIM2çš„æ—¶åŸºå•å…ƒ
 	TIM_TimeBaseInit(TIM2, &TIM_TimeBaseInitStructure);
 	
-	/* Êä³ö±È½Ï³õÊ¼»¯ */
-	// ¶¨Òå½á¹¹Ìå±äÁ¿
+	/* è¾“å‡ºæ¯”è¾ƒåˆå§‹åŒ– */
+	// å®šä¹‰ç»“æ„ä½“å˜é‡
 	TIM_OCInitTypeDef TIM_OCInitStructure;
-	// ½á¹¹Ìå³õÊ¼»¯£¬Èô½á¹¹ÌåÃ»ÓĞÍêÕû¸³Öµ
-	// Ôò×îºÃÖ´ĞĞ´Ëº¯Êı£¬¸ø½á¹¹ÌåËùÓĞ³ÉÔ±¶¼¸³Ò»¸öÄ¬ÈÏÖµ
-	// ±ÜÃâ½á¹¹Ìå³õÖµ²»È·¶¨µÄÎÊÌâ
+	// ç»“æ„ä½“åˆå§‹åŒ–ï¼Œè‹¥ç»“æ„ä½“æ²¡æœ‰å®Œæ•´èµ‹å€¼
+	// åˆ™æœ€å¥½æ‰§è¡Œæ­¤å‡½æ•°ï¼Œç»™ç»“æ„ä½“æ‰€æœ‰æˆå‘˜éƒ½èµ‹ä¸€ä¸ªé»˜è®¤å€¼
+	// é¿å…ç»“æ„ä½“åˆå€¼ä¸ç¡®å®šçš„é—®é¢˜
 	TIM_OCStructInit(&TIM_OCInitStructure);
-	// Êä³ö±È½ÏÄ£Ê½£¬Ñ¡ÔñPWMÄ£Ê½1
+	// è¾“å‡ºæ¯”è¾ƒæ¨¡å¼ï¼Œé€‰æ‹©PWMæ¨¡å¼1
 	TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;
-	// Êä³ö¼«ĞÔ£¬Ñ¡ÔñÎª¸ß£¬ÈôÑ¡Ôñ¼«ĞÔÎªµÍ£¬ÔòÊä³ö¸ßµÍµçÆ½È¡·´
+	// è¾“å‡ºææ€§ï¼Œé€‰æ‹©ä¸ºé«˜ï¼Œè‹¥é€‰æ‹©ææ€§ä¸ºä½ï¼Œåˆ™è¾“å‡ºé«˜ä½ç”µå¹³å–å
 	TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
-	// Êä³öÊ¹ÄÜ
+	// è¾“å‡ºä½¿èƒ½
 	TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
-	// ³õÊ¼µÄCCRÖµ
+	// åˆå§‹çš„CCRå€¼
 	TIM_OCInitStructure.TIM_Pulse = 0;
 	
-	// ³õÊ¼»¯¶¨Ê±Æ÷2µÄÍ¨µÀ1
+	// åˆå§‹åŒ–å®šæ—¶å™¨2çš„é€šé“1
 	TIM_OC1Init(TIM2, &TIM_OCInitStructure);
-	// Ê¹ÄÜTIM2ÔÚCCR1ÉÏµÄÔ¤×°ÔØ¼Ä´æÆ÷
+	// ä½¿èƒ½TIM2åœ¨CCR1ä¸Šçš„é¢„è£…è½½å¯„å­˜å™¨
 	TIM_OC1PreloadConfig(TIM2, TIM_OCPreload_Enable);
-	// ³õÊ¼»¯¶¨Ê±Æ÷2µÄÍ¨µÀ2
+	// åˆå§‹åŒ–å®šæ—¶å™¨2çš„é€šé“2
 	TIM_OC2Init(TIM2, &TIM_OCInitStructure);
-	// Ê¹ÄÜTIM2ÔÚCCR2ÉÏµÄÔ¤×°ÔØ¼Ä´æÆ÷
+	// ä½¿èƒ½TIM2åœ¨CCR2ä¸Šçš„é¢„è£…è½½å¯„å­˜å™¨
 	TIM_OC2PreloadConfig(TIM2, TIM_OCPreload_Enable);
-	// ³õÊ¼»¯¶¨Ê±Æ÷2µÄÍ¨µÀ3
+	// åˆå§‹åŒ–å®šæ—¶å™¨2çš„é€šé“3
 	TIM_OC3Init(TIM2, &TIM_OCInitStructure);
-	// Ê¹ÄÜTIM2ÔÚCCR3ÉÏµÄÔ¤×°ÔØ¼Ä´æÆ÷
+	// ä½¿èƒ½TIM2åœ¨CCR3ä¸Šçš„é¢„è£…è½½å¯„å­˜å™¨
 	TIM_OC3PreloadConfig(TIM2, TIM_OCPreload_Enable);
-	// ³õÊ¼»¯¶¨Ê±Æ÷2µÄÍ¨µÀ4
+	// åˆå§‹åŒ–å®šæ—¶å™¨2çš„é€šé“4
 	TIM_OC4Init(TIM2, &TIM_OCInitStructure);
-	// Ê¹ÄÜTIM2ÔÚCCR4ÉÏµÄÔ¤×°ÔØ¼Ä´æÆ÷
+	// ä½¿èƒ½TIM2åœ¨CCR4ä¸Šçš„é¢„è£…è½½å¯„å­˜å™¨
 	TIM_OC4PreloadConfig(TIM2, TIM_OCPreload_Enable);
 	
-	/* TIMÊ¹ÄÜ */
-	// Ê¹ÄÜTIM2ÔÚARRÉÏµÄÔ¤×°ÔØ¼Ä´æÆ÷
+	/* TIMä½¿èƒ½ */
+	// ä½¿èƒ½TIM2åœ¨ARRä¸Šçš„é¢„è£…è½½å¯„å­˜å™¨
 	TIM_ARRPreloadConfig(TIM2, ENABLE);
-	// Ê¹ÄÜTIM2£¬¶¨Ê±Æ÷¿ªÊ¼ÔËĞĞ
+	// ä½¿èƒ½TIM2ï¼Œå®šæ—¶å™¨å¼€å§‹è¿è¡Œ
 	TIM_Cmd(TIM2, ENABLE);
 }
 
 /**
- * µç»ú·Ö²¼£º
+ * ç”µæœºåˆ†å¸ƒï¼š
  * Motor1	Motor2
  * Motor4	Motor3
- * º¯Êı£ºPWM³õÊ¼»¯
- * ²ÎÊı£ºÎŞ
- * ·µ»ØÖµ£ºÎŞ
+ * å‡½æ•°ï¼šPWMåˆå§‹åŒ–
+ * å‚æ•°ï¼šæ— 
+ * è¿”å›å€¼ï¼šæ— 
  */
 void Motor_Init(void)
 {
-	/* ¿ªÆôÊ±ÖÓ */
-	// ¿ªÆôGPIOAµÄÊ±ÖÓ
+	/* å¼€å¯æ—¶é’Ÿ */
+	// å¼€å¯GPIOAçš„æ—¶é’Ÿ
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
 	
-	/* GPIO³õÊ¼»¯ */
+	/* GPIOåˆå§‹åŒ– */
 	GPIO_InitTypeDef GPIO_InitStructure;
-	// ¸´ÓÃÍÆÍìÊä³öÄ£Ê½
+	// å¤ç”¨æ¨æŒ½è¾“å‡ºæ¨¡å¼
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
-	// Motor1£ºµç»ú1£¬Motor2£ºµç»ú2£¬Motor3£ºµç»ú3£¬Motor4£ºµç»ú4
+	// Motor1ï¼šç”µæœº1ï¼ŒMotor2ï¼šç”µæœº2ï¼ŒMotor3ï¼šç”µæœº3ï¼ŒMotor4ï¼šç”µæœº4
 	GPIO_InitStructure.GPIO_Pin = Motor1_Pin | Motor2_Pin | Motor3_Pin | Motor4_Pin;
-	// Êä³öËÙ¶ÈÎª50MHz
+	// è¾“å‡ºé€Ÿåº¦ä¸º50MHz
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	// GPIO³õÊ¼»¯
+	// GPIOåˆå§‹åŒ–
 	GPIO_Init(Motor_Port, &GPIO_InitStructure);
 	
-	// ¶¨Ê±Æ÷2Êä³ö±È½Ï³õÊ¼»¯
+	// å®šæ—¶å™¨2è¾“å‡ºæ¯”è¾ƒåˆå§‹åŒ–
 	Timer2_Init();
 }
 
 /**
- * º¯Êı£ºµç»úÇı¶¯
- * ²ÎÊı£ºduty1~4£ºµç»ú1~4ÒªĞ´ÈëCCRµÄÖµ£¬·¶Î§£º0~1000
- * ·µ»ØÖµ£ºÎŞ
- * ×¢ÒâÊÂÏî£ºCCRºÍARR¹²Í¬¾ö¶¨Õ¼¿Õ±È£¬´Ëº¯Êı½öÉèÖÃCCRµÄÖµ£¬²¢²»Ö±½ÓÊÇÕ¼¿Õ±È
- * Õ¼¿Õ±ÈDuty = CCR / (ARR + 1)
+ * å‡½æ•°ï¼šç”µæœºé©±åŠ¨
+ * å‚æ•°ï¼šduty1~4ï¼šç”µæœº1~4è¦å†™å…¥CCRçš„å€¼ï¼ŒèŒƒå›´ï¼š0~1000
+ * è¿”å›å€¼ï¼šæ— 
+ * æ³¨æ„äº‹é¡¹ï¼šCCRå’ŒARRå…±åŒå†³å®šå ç©ºæ¯”ï¼Œæ­¤å‡½æ•°ä»…è®¾ç½®CCRçš„å€¼ï¼Œå¹¶ä¸ç›´æ¥æ˜¯å ç©ºæ¯”
+ * å ç©ºæ¯”Duty = CCR / (ARR + 1)
  */
 void Motor_Out(int16_t duty1, int16_t duty2, int16_t duty3, int16_t duty4)
 {
-	// ÏŞÖÆCCRµÄÖµµÄ·¶Î§Îª0~1000
+	// é™åˆ¶CCRçš„å€¼çš„èŒƒå›´ä¸º0~1000
 	if (duty1 > 1000)
 	{
 		duty1 = 1000;
@@ -143,7 +143,7 @@ void Motor_Out(int16_t duty1, int16_t duty2, int16_t duty3, int16_t duty4)
 		duty4 = 0;
 	}
 	
-	// ÉèÖÃCCR1~4µÄÖµ
+	// è®¾ç½®CCR1~4çš„å€¼
 	TIM_SetCompare1(TIM2, duty1);
 	TIM_SetCompare2(TIM2, duty2);
 	TIM_SetCompare3(TIM2, duty3);

@@ -17,7 +17,7 @@ extern uint8_t NRF24L01_RxPacket[];
 extern uint8_t NRF24L01_SendFlag;
 extern uint8_t NRF24L01_ReceiveFlag;
 
-/* 指令实现 */
+/* 鎸囦护瀹炵幇 */
 void NRF24L01_WriteReg(uint8_t RegAddress, uint8_t Data);
 uint8_t NRF24L01_ReadReg(uint8_t RegAddress);
 void NRF24L01_WriteRegs(uint8_t RegAddress, uint8_t *DataArray, uint8_t Count);
@@ -27,7 +27,7 @@ void NRF24L01_ReadRxPayload(uint8_t *DataArray, uint8_t Count);
 void NRF24L01_FlushTx(void);
 void NRF24L01_FlushRx(void);
 
-/* 功能函数 */
+/* 鍔熻兘鍑芥暟 */
 void NRF24L01_PowerDown(void);
 void NRF24L01_StandbyI(void);
 void NRF24L01_RxMode(void);

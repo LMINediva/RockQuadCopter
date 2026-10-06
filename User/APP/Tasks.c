@@ -1,106 +1,106 @@
 #include "Tasks.h"
 
-// �弶֧�ְ��е�Ӳ�������Ƿ��ʼ����ɱ�־
+// 板级支持包中的硬件驱动是否初始化完成标志
 uint8_t BSP_Init_OK = 0;
 
 /**
- * ������NVIC��ʼ��
- * ��������
- * ����ֵ����
+ * 函数：NVIC初始化
+ * 参数：无
+ * 返回值：无
  */
 void My_NVIC_Init(void)
 {
-	// NVIC�жϷ��飬����NVICΪ����2
-	// ����ռ���ȼ���Χ��0~3����Ӧ���ȼ���Χ��0~3
-	// �˷������������������н������һ��
-	// ���ж���жϣ����԰Ѵ˴������main�����ڣ�whileѭ��֮ǰ
-	// �����ö�����÷���Ĵ��룬���ִ�е����ûḲ����ִ�е�����
+	// NVIC中断分组，配置NVIC为分组2
+	// 即抢占优先级范围：0~3，响应优先级范围：0~3
+	// 此分组配置在整个工程中仅需调用一次
+	// 若有多个中断，可以把此代码放在main函数内，while循环之前
+	// 若调用多次配置分组的代码，则后执行的配置会覆盖先执行的配置
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 	
-	// NVIC����
+	// NVIC配置
 	NVIC_InitTypeDef NVIC_InitStructure;
 	
-	// Timer3��ѡ������NVIC��TIM3��
+	// Timer3，选择配置NVIC的TIM3线
 	NVIC_InitStructure.NVIC_IRQChannel = TIM3_IRQn;
-	// ָ��NVIC��·ʹ��
+	// 指定NVIC线路使能
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-	// ָ��NVIC��·����ռ���ȼ�Ϊ0
+	// 指定NVIC线路的抢占优先级为0
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
-	// ָ��NVIC��·����Ӧ���ȼ�Ϊ0
+	// 指定NVIC线路的响应优先级为0
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
-	// ���ṹ���������NVIC_Init������NVIC����
+	// 将结构体变量交给NVIC_Init，配置NVIC外设
 	NVIC_Init(&NVIC_InitStructure);
 	
-	// NRF24L01�жϣ�ѡ������NVIC��EXTI0��
+	// NRF24L01中断，选择配置NVIC的EXTI0线
 	NVIC_InitStructure.NVIC_IRQChannel = EXTI0_IRQn;
-	// ָ��NVIC��·ʹ��
+	// 指定NVIC线路使能
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-	// ָ��NVIC��·����ռ���ȼ�Ϊ1
+	// 指定NVIC线路的抢占优先级为1
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
-	// ָ��NVIC��·����Ӧ���ȼ�Ϊ1
+	// 指定NVIC线路的响应优先级为1
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
-	// ���ṹ���������NVIC_Init������NVIC����
+	// 将结构体变量交给NVIC_Init，配置NVIC外设
 	NVIC_Init(&NVIC_InitStructure);
 	
-	// ���ڣ�ѡ������NVIC��USART1��
+	// 串口，选择配置NVIC的USART1线
 	NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQn;
-	// ָ��NVIC��·ʹ��
+	// 指定NVIC线路使能
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-	// ָ��NVIC��·����ռ���ȼ�Ϊ2
+	// 指定NVIC线路的抢占优先级为2
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;
-	// ָ��NVIC��·����Ӧ���ȼ�Ϊ2
+	// 指定NVIC线路的响应优先级为2
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 2;
-	// ���ṹ���������NVIC_Init������NVIC����
+	// 将结构体变量交给NVIC_Init，配置NVIC外设
 	NVIC_Init(&NVIC_InitStructure);
 }
 
 /**
- * �������弶֧�ְ��е�Ӳ��������ʼ��
- * ��������
- * ����ֵ����
+ * 函数：板级支持包中的硬件驱动初始化
+ * 参数：无
+ * 返回值：无
  */
 void BSP_Init(void)
 {	
-	// LED��ʼ��
+	// LED初始化
 	LED_Init();
-	// LED��˸
+	// LED闪烁
 	LED_ON_OFF();
-	// ���ڳ�ʼ���������ʣ�115200��8λ���ݣ�1λֹͣλ��������żУ��
+	// 串口初始化，波特率：115200，8位数据，1位停止位，禁用奇偶校验
 	Uart1_Init(115200);
-	// Timer3��ʼ����Ƶ��Ϊ��1KHZ
+	// Timer3初始化，频率为：1KHZ
 	Timer3_Init(1000);
-	// NVIC��ʼ��
+	// NVIC初始化
 	My_NVIC_Init();
-	// PWM��ʼ��
+	// PWM初始化
 	Motor_Init();
-	// ADC��DMA��ʼ��
+	// ADC及DMA初始化
 	ADC1_Init();
-	// NRF24L01��ʼ��
+	// NRF24L01初始化
 	NRF24L01_Init();
-	// ���MPU6050��ʼ�����ɹ����������������
+	// 如果MPU6050初始化不成功，则程序不向下运行
 	while (MPU6050_Init() != 1);
-	// �����洢ģ���ʼ�������ϵ��ʱ����������ݼ��ػ�Store_Data��
-	// ʵ�ֵ��粻��ʧ
+	// 参数存储模块初始化，在上电的时候将闪存的数据加载回Store_Data，
+	// 实现掉电不丢失
 	Store_Init();
 	
 	BSP_Init_OK = 1;
 }
 
 /**
- * ��������ѭ��������Ƶ��Ϊ1000HZ������
- * ��������
- * ����ֵ����
+ * 函数：主循环中运行频率为1000HZ的任务
+ * 参数：无
+ * 返回值：无
  */
 void Task_1000HZ(void)
 {
-	// ���������ȡMPU6050�����ݼĴ���ʧ��
+	// 如果连续读取MPU6050的数据寄存器失败
 	if (MPU6050_SequenceRead() == 1)
 	{
-		// ͳ��I2C�����Ĵ���
+		// 统计I2C出错的次数
 		I2C_Error++;
-		// �ִζ�ȡMPU6050�����ݼĴ���
+		// 分次读取MPU6050的数据寄存器
 		MPU6050_SingleRead();
 	}
-	// �ϳ�MPU6050��16λ����
+	// 合成MPU6050的16位数据
 	MPU6050_Compose();
 }

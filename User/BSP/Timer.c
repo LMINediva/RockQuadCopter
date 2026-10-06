@@ -1,73 +1,73 @@
 #include "Timer.h"
 #include "Tasks.h"
 
-// ����1ms��2ms��4ms
+// 计数1ms、2ms和4ms
 volatile uint8_t Count_1ms, Count_2ms, Count_4ms;
 
 /**
- * ��������ʱ��3�жϳ�ʼ��
- * ��������
- * ����ֵ����
+ * 函数：定时器3中断初始化
+ * 参数：无
+ * 返回值：无
  */
 void Timer3_Init(uint16_t Handler_Frequency)
 {
-	// ����TIM3��ʱ��
+	// 开启TIM3的时钟
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
 	
-	// ѡ��TIM3Ϊ�ڲ�ʱ�ӣ��������ô˺�����TIMĬ��ҲΪ�ڲ�ʱ��
+	// 选择TIM3为内部时钟，若不调用此函数，TIM默认也为内部时钟
 	TIM_InternalClockConfig(TIM3);
 	
-	// ����TIM3ΪĬ��ֵ
+	// 重置TIM3为默认值
 	TIM_DeInit(TIM3);
 	
-	// ʱ����Ԫ��ʼ��
+	// 时基单元初始化
 	TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStructure;
-	// ʱ�ӷ�Ƶ��ѡ�񲻷�Ƶ���˲������������˲���ʱ�ӣ���Ӱ��ʱ����Ԫ����
+	// 时钟分频，选择不分频，此参数用于配置滤波器时钟，不影响时基单元功能
 	TIM_TimeBaseInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
-	// ������ģʽ��ѡ�����ϼ���
+	// 计数器模式，选择向上计数
 	TIM_TimeBaseInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
-	// �������ڣ���ARR��ֵ
+	// 计数周期，即ARR的值
 	TIM_TimeBaseInitStructure.TIM_Period = 1000 * 1000 / Handler_Frequency;
-	// Ԥ��Ƶ������PSC��ֵ
+	// 预分频器，即PSC的值
 	TIM_TimeBaseInitStructure.TIM_Prescaler = 72 - 1;
-	// �ظ����������߼���ʱ���Ż��õ�
+	// 重复计数器，高级定时器才会用到
 	TIM_TimeBaseInitStructure.TIM_RepetitionCounter = 0;
-	// ����TIM3��ʱ����Ԫ��1MHzƵ���£���1000������Ϊ1����ʱ��
+	// 配置TIM3的时基单元，1MHz频率下，计1000个数，为1毫秒时间
 	TIM_TimeBaseInit(TIM3, &TIM_TimeBaseInitStructure);
 	
-	// �ж�������ã������ʱ�����±�־λ
-	// TIM_TimeBaseInit����ĩβ���ֶ������˸����¼�
-	// ��������˱�־λ�������жϺ󣬻����̽���һ���ж�
-	// �������������⣬������˱�־λҲ��
+	// 中断输出配置，清除定时器更新标志位
+	// TIM_TimeBaseInit函数末尾，手动产生了更新事件
+	// 若不清除此标志位，则开启中断后，会立刻进入一次中断
+	// 如果不介意此问题，则不清除此标志位也可
 	TIM_ClearFlag(TIM3, TIM_FLAG_Update);
 	
-	// ����TIM3�ĸ����ж�
+	// 开启TIM3的更新中断
 	TIM_ITConfig(TIM3, TIM_IT_Update, ENABLE);
 	
-	// ʹ��TIM3����ʱ����ʼ����
+	// 使能TIM3，定时器开始运行
 	TIM_Cmd(TIM3, ENABLE);
 }
 
 /**
- * ��������ʱ��3�жϺ��������Ը��Ƶ�ʹ�����ĵط�
- * ��������
- * ����ֵ����
+ * 函数：定时器3中断函数，可以复制到使用它的地方
+ * 参数：无
+ * 返回值：无
  */
 void TIM3_IRQHandler(void)
 {
-	// ��������жϱ�־λ == SET
+	// 如果更新中断标志位 == SET
 	if (TIM_GetITStatus(TIM3, TIM_IT_Update) == SET)
 	{
-		// �弶֧�ְ��е�Ӳ��������ʼ��δ��ɣ��򷵻�
+		// 板级支持包中的硬件驱动初始化未完成，则返回
 		if (BSP_Init_OK == 0) {
-			// ��������жϱ�־λ
+			// 清除更新中断标志位
 			TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
 			return;
 		}
 		Count_1ms++;
 		Count_2ms++;
 		Count_4ms++;
-		// ��������жϱ�־λ
+		// 清除更新中断标志位
 		TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
 	}
 }

@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <string.h>
 #include "OLED.h"
 #include "OLED_Font.h"
 
@@ -261,6 +263,28 @@ void OLED_ShowBinNum(uint8_t Line, uint8_t Column, uint32_t Number, uint8_t Leng
 	{
 		OLED_ShowChar(Line, Column + i, Number / OLED_Pow(2, Length - i - 1) % 2 + '0');
 	}
+}
+
+/**
+ * @brief 显示浮点数
+ * @param Line 起始列坐标 (0-127)
+ * @param Column 起始行坐标 (0,1,2,3 对应 8x16 字体行)
+ * @param Number 要显示的浮点数值
+ * @param Precision 小数点后保留位数 (0-5 建议，过多会溢出屏幕)
+ * @retval 无
+ */
+void OLED_ShowFloat(uint8_t Line, uint8_t Column, float Number, uint8_t Precision)
+{
+	// 缓冲区需足够大，建议16字节以上
+	char buffer;
+	// 格式控制串缓冲区
+	char format;
+	// 动态构建格式字符串，例如“%.2f”
+	snprintf(&format, sizeof(format), "%%.%df", Precision);
+	// 执行格式化转换 (注意：Keil MDK 需开启微库或完整 libc 支持浮点 printf)
+	snprintf(&buffer, sizeof(buffer), &format, Number);
+	// 调用原有字符串显示函数
+	OLED_ShowString(Line, Column, &buffer);
 }
 
 /**

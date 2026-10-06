@@ -1,128 +1,128 @@
 #include "MySPI.h"
 
 /**
- * ������SPIдCSN���ŵ�ƽ
- * ������BitValue Э��㴫��ĵ�ǰ��Ҫд��CSN�ĵ�ƽ����Χ��0~1
- * ����ֵ����
- * ע������˺�����Ҫ�û�ʵ�����ݣ�
- * ��BitValueΪ0ʱ����Ҫ��CSNΪ�͵�ƽ��
- * ��BitValueΪ1ʱ����Ҫ��CSNΪ�ߵ�ƽ
+ * 函数：SPI写CSN引脚电平
+ * 参数：BitValue 协议层传入的当前需要写入CSN的电平，范围：0~1
+ * 返回值：无
+ * 注意事项：此函数需要用户实现内容，
+ * 当BitValue为0时，需要置CSN为低电平，
+ * 当BitValue为1时，需要置CSN为高电平
  */
 static void MySPI_W_CSN(uint8_t BitValue)
 {
-	// ����BitValue������CSN���ŵ�ƽ
+	// 根据BitValue，设置CSN引脚电平
 	GPIO_WriteBit(CSN_Port, CSN_Pin, (BitAction)BitValue);
 }
 
 /**
- * ������SPI��ʼ��
- * ��������
- * ����ֵ����
- * ע������˺�����Ҫ�û�ʵ�����ݣ�
- * ʵ��CSN��SCK��MOSI��MISO���ŵĳ�ʼ��
+ * 函数：SPI初始化
+ * 参数：无
+ * 返回值：无
+ * 注意事项：此函数需要用户实现内容，
+ * 实现CSN、SCK、MOSI和MISO引脚的初始化
  */
 void MySPI_Init(void)
 {
-	/* ����ʱ�� */
-	// ����IO�˿�A��Bʱ��
+	/* 开启时钟 */
+	// 开启IO端口A和B时钟
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOB, ENABLE);
-	// ����SPI1��ʱ��
+	// 开启SPI1的时钟
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1, ENABLE);
 	
-	/* GPIO��ʼ�� */
-	// ��CSN���ų�ʼ��Ϊ�������ģʽ
+	/* GPIO初始化 */
+	// 将CSN引脚初始化为推挽输出模式
 	GPIO_InitTypeDef GPIO_InitStructure;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
 	GPIO_InitStructure.GPIO_Pin = CSN_Pin;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(CSN_Port, &GPIO_InitStructure);
 	
-	// ��SCK���ų�ʼ��Ϊ�����������ģʽ
+	// 将SCK引脚初始化为复用推挽输出模式
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
 	GPIO_InitStructure.GPIO_Pin = SCK_Pin;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(SCK_Port, &GPIO_InitStructure);
 	
-	// ��MOSI���ų�ʼ��Ϊ�����������ģʽ
+	// 将MOSI引脚初始化为复用推挽输出模式
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
 	GPIO_InitStructure.GPIO_Pin = MOSI_Pin;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(MOSI_Port, &GPIO_InitStructure);
 	
-	// ��MISO���ų�ʼ��Ϊ��������ģʽ
+	// 将MISO引脚初始化为上拉输入模式
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
 	GPIO_InitStructure.GPIO_Pin = MISO_Pin;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(MISO_Port, &GPIO_InitStructure);
 	
-	/* SPI��ʼ�� */
-	// ����ṹ�����
+	/* SPI初始化 */
+	// 定义结构体变量
 	SPI_InitTypeDef SPI_InitStructure;
-	// ģʽ��ѡ��ΪSPI��ģʽ
+	// 模式，选择为SPI主模式
 	SPI_InitStructure.SPI_Mode = SPI_Mode_Master;
-	// ����ѡ��2��ȫ˫��
+	// 方向，选择2线全双工
 	SPI_InitStructure.SPI_Direction = SPI_Direction_2Lines_FullDuplex;
-	// ���ݿ��ȣ�ѡ��Ϊ8λ
+	// 数据宽度，选择为8位
 	SPI_InitStructure.SPI_DataSize = SPI_DataSize_8b;
-	// ����λ��ѡ���λ����
+	// 先行位，选择高位先行
 	SPI_InitStructure.SPI_FirstBit = SPI_FirstBit_MSB;
-	// �����ʷ�Ƶ��ѡ��8��Ƶ��Ϊ72MHz / 8 = 9MHz
+	// 波特率分频，选择8分频，为72MHz / 8 = 9MHz
 	SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_8;
-	// SPI���ԣ�ѡ��ͼ��ԣ�ΪSPIģʽ0
+	// SPI极性，选择低极性，为SPI模式0
 	SPI_InitStructure.SPI_CPOL = SPI_CPOL_Low;
-	// SPI��λ��ѡ���һ��ʱ�ӱ��ز�������Ϊ0�����Ժ���λ����ѡ��SPIģʽ0
+	// SPI相位，选择第一个时钟边沿采样，即为0，极性和相位决定选择SPI模式0
 	SPI_InitStructure.SPI_CPHA = SPI_CPHA_1Edge;
-	// NSS��ѡ������������
+	// NSS，选择由软件控制
 	SPI_InitStructure.SPI_NSS = SPI_NSS_Soft;
-	// CRC����ʽ����ʱ�ò�������Ĭ��ֵ7
+	// CRC多项式，暂时用不到，给默认值7
 	SPI_InitStructure.SPI_CRCPolynomial = 7;
-	// ���ṹ���������SPI_Init������SPI1
+	// 将结构体变量交给SPI_Init，配置SPI1
 	SPI_Init(SPI1, &SPI_InitStructure);
 	
-	/* SPIʹ�� */
-	// ʹ��SPI1����ʼ����
+	/* SPI使能 */
+	// 使能SPI1，开始运行
 	SPI_Cmd(SPI1, ENABLE);
 	
-	/* ����Ĭ�ϵ�ƽ */
-	// CSNĬ�ϸߵ�ƽ������ѡ�дӻ�
+	/* 设置默认电平 */
+	// CSN默认高电平，即不选中从机
 	MySPI_W_CSN(1);
 }
 
 /**
- * ������SPI��ʼ
- * ��������
- * ����ֵ����
+ * 函数：SPI起始
+ * 参数：无
+ * 返回值：无
  */
 void MySPI_Start(void)
 {
-	// ����CSN����ʼʱ��
+	// 拉低CSN，开始时序
 	MySPI_W_CSN(0);
 }
 
 /**
- * ������SPI��ֹ
- * ��������
- * ����ֵ����
+ * 函数：SPI终止
+ * 参数：无
+ * 返回值：无
  */
 void MySPI_Stop(void)
 {
-	// ����CSN����ֹʱ��
+	// 拉高CSN，终止时序
 	MySPI_W_CSN(1);
 }
 
 /**
- * ������SPI��������һ���ֽڣ�ʹ��SPIģʽ0
- * ������ByteSend Ҫ���͵�һ���ֽ�
- * ����ֵ�����յ�һ���ֽ�
+ * 函数：SPI交换传输一个字节，使用SPI模式0
+ * 参数：ByteSend 要发送的一个字节
+ * 返回值：接收的一个字节
  */
 uint8_t MySPI_SwapByte(uint8_t ByteSend)
 {
-	// �ȴ��������ݼĴ���Ϊ��
+	// 等待发送数据寄存器为空
 	while (SPI_I2S_GetFlagStatus(SPI1, SPI_I2S_FLAG_TXE) != SET);
-	// д�����ݵ��������ݼĴ�������ʼ����ʱ��
+	// 写入数据到发送数据寄存器，开始产生时序
 	SPI_I2S_SendData(SPI1, ByteSend);
-	// �ȴ��������ݼĴ����ǿ�
+	// 等待接收数据寄存器非空
 	while (SPI_I2S_GetFlagStatus(SPI1, SPI_I2S_FLAG_RXNE) != SET);
-	// ��ȡ���յ������ݲ�����
+	// 读取接收到的数据并返回
 	return SPI_I2S_ReceiveData(SPI1);
 }

@@ -12,7 +12,7 @@
 #include "MPU6050.h"
 #include "NRF24L01.h"
 
-/* MPU6050--¼ÓËÙ¶È¼Æ½á¹¹Ìå */
+/* MPU6050--åŠ é€Ÿåº¦è®¡ç»“æž„ä½“ */
 struct _acc
 {
 	int16_t x;
@@ -21,7 +21,7 @@ struct _acc
 };
 extern struct _acc acc;
 
-/* MPU6050--ÍÓÂÝÒÇ½á¹¹Ìå */
+/* MPU6050--é™€èžºä»ªç»“æž„ä½“ */
 struct _gyro
 {
 	int16_t x;

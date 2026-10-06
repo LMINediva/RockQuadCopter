@@ -2,7 +2,7 @@
 #define __MPU6050_H
 #include "stm32f10x.h"                  // Device header
 
-// MPU6050的I2C从机地址
+// MPU6050鐨処2C浠庢満鍦板潃
 #define MPU6050_ADDRESS		0xD0
 
 extern uint32_t I2C_Error;
